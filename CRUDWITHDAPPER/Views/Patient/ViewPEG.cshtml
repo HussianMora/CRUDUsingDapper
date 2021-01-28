@@ -1,0 +1,398 @@
+﻿@{
+    ViewBag.Title = "PEG";
+}
+<style type="text/css">
+    #PEGPainScreening h3, #PEGPainScreening h3 {
+        font-size: 14px;
+        margin-top: 25px;
+        margin-bottom: 10px;
+    }
+
+    h3.mainheader {
+        text-align: center;
+        background-color: #ECECEC;
+        padding: 10px 5px;
+        font-size: 15px;
+    }
+
+    textarea {
+        border: 2px solid #ccc;
+        padding: 10px;
+        vertical-align: top;
+        width: 25%;
+        resize: none;
+        padding: 4px;
+        vertical-align: top;
+        width: 100%;
+        resize: none;
+        overflow-y: hidden !important;
+        z-index: 9999;
+        /*position:relative;*/
+    }
+
+    #PEGPainScreening .div4txtArea2 {
+        height: 45px;
+    }
+</style>
+<style>
+    ul.peg li {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div id="PEGPainScreening" class="">
+    <form>
+        <div class="form-horizontal">
+            <h3 class="mainheader mt-0 mb-15">PEG Pain Screening Tool</h3>
+
+            <div class="px-10">
+                <input type="hidden" id="Patient_Id" name="Patient_Id"/>
+                <ul class="pl-15 peg">
+                    <li class="relative">
+                        <span class="font_13" style="position:absolute; left:-15px;"><b>1.</b></span>
+                        <p style="font-weight:bold" class="font_13 my-10 mb-5">What number best describes your <u>pain on average</u> in the past week:</p>
+                        @*<table style="table-layout: fixed;">
+                            <tr>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options1" value="0" onchange="CalculateScore();" checked>
+                                        <i></i>
+                                        0
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options2" value="1" onchange="CalculateScore();">
+                                        <i></i>
+                                        1
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options3" value="2" onchange="CalculateScore();">
+                                        <i></i>
+                                        2
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options4" value="3" onchange="CalculateScore();">
+                                        <i></i>
+                                        3
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options5" value="4" onchange="CalculateScore();">
+                                        <i></i>
+                                        4
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options6" value="5" onchange="CalculateScore();">
+                                        <i></i>
+                                        5
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options7" value="6" onchange="CalculateScore();">
+                                        <i></i>
+                                        6
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options8" value="7" onchange="CalculateScore();">
+                                        <i></i>
+                                        7
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options9" value="8" onchange="CalculateScore();">
+                                        <i></i>
+                                        8
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options10" value="9" onchange="CalculateScore();">
+                                        <i></i>
+                                        9
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="PainOnAverage" id="options5" value="10" onchange="CalculateScore();">
+                                        <i></i>
+                                        10
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="10">
+                                    No Pain
+                                </td>
+                                <td class="text-right">
+                                    Pain as bad as you can imagine
+                                </td>
+                            </tr>
+                        </table>*@
+                        <input type="text" class="form-control input-sm date-picker requiredinp" id="AveragePain">
+                    </li>
+                    <li class="relative">
+                        <span class="font_13" style="position:absolute; left:-15px;"><b>2.</b></span>
+                        <p style="font-weight:bold" class="font_13 my-10 mb-5">What number best describes how, during the past week, pain has interfered with your <u>enjoyment of life?</u> </p>
+                        @*<table style="table-layout: fixed;">
+                            <tr>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options1" value="0" checked onchange="CalculateScore();">
+                                        <i></i>
+                                        0
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options2" value="1" onchange="CalculateScore();">
+                                        <i></i>
+                                        1
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options3" value="2" onchange="CalculateScore();">
+                                        <i></i>
+                                        2
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options4" value="3" onchange="CalculateScore();">
+                                        <i></i>
+                                        3
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options5" value="4" onchange="CalculateScore();">
+                                        <i></i>
+                                        4
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options6" value="5" onchange="CalculateScore();">
+                                        <i></i>
+                                        5
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options7" value="6" onchange="CalculateScore();">
+                                        <i></i>
+                                        6
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options8" value="7" onchange="CalculateScore();">
+                                        <i></i>
+                                        7
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options9" value="8" onchange="CalculateScore();">
+                                        <i></i>
+                                        8
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options10" value="9" onchange="CalculateScore();">
+                                        <i></i>
+                                        9
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="EnjoymentOfLife" id="options5" value="10" onchange="CalculateScore();">
+                                        <i></i>
+                                        10
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="10">
+                                    Does not interfere
+                                </td>
+                                <td class="text-right">
+                                    Completely interferes
+                                </td>
+                            </tr>
+                        </table>*@
+                        <input type="text" class="form-control input-sm date-picker requiredinp" id="EnjoyementOfLife">
+
+                    </li>
+                    <li class="relative">
+                        <span class="font_13" style="position:absolute; left:-15px;"><b>3.</b></span>
+                        <p style="font-weight:bold" class="font_13 my-10 mb-5">What number best describes how, during the past week, pain has interfered with your <u>general activity?</u></p>
+                        @*<table style="table-layout: fixed;">
+                            <tr>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options1" value="0" checked onchange="CalculateScore();">
+                                        <i></i>
+                                        0
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options2" value="1" onchange="CalculateScore();">
+                                        <i></i>
+                                        1
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options3" value="2" onchange="CalculateScore();">
+                                        <i></i>
+                                        2
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options4" value="3" onchange="CalculateScore();">
+                                        <i></i>
+                                        3
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options5" value="4" onchange="CalculateScore();">
+                                        <i></i>
+                                        4
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options6" value="5" onchange="CalculateScore();">
+                                        <i></i>
+                                        5
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options7" value="6" onchange="CalculateScore();">
+                                        <i></i>
+                                        6
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options8" value="7" onchange="CalculateScore();">
+                                        <i></i>
+                                        7
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options9" value="8" onchange="CalculateScore();">
+                                        <i></i>
+                                        8
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options10" value="9" onchange="CalculateScore();">
+                                        <i></i>
+                                        9
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="is-radio-inline mr-26">
+                                        <input type="radio" class="PEG" name="GeneralActivity" id="options5" value="10" onchange="CalculateScore();">
+                                        <i></i>
+                                        10
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="10">
+                                    Does not interfere
+                                </td>
+                                <td class="text-right">
+                                    Completely interferes
+                                </td>
+                            </tr>
+                        </table>*@
+                        <input type="text" class="form-control input-sm date-picker requiredinp" id="GeneralActivity">
+                    </li>
+                </ul>
+
+                <p class="mb-10 font_13 bold" hidden>
+                    To compute the PEG score, add the three responses to the questions above, then divide by three to get a final score out of 10.
+                </p>
+                <p class="mb-15 font_13 bold">
+                    The final PEG score can mean very different things to different patients. The PEG score, like most other screening instruments, is most useful in tracking changes over
+                    time. The PEG score should decrease over time after therapy has begun.
+                </p>
+                <div class="row row-sm">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-sm-4 pt-5">
+                                <b> Final Score:</b>
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control input-sm" id="FinalScore" name="">
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="col-sm-4 pull-right text-right hide">
+                        <button type="button" id="" class="btn btn-sm btn-dark" onclick="">Save</button>
+                        <button type="button" id="" class="btn btn-sm btn-gray" onclick="">Print</button>
+                    </div>-->
+                </div>
+            </div>
+
+            <div class="pl15 sticky-action" id="divCustomFormButtons">
+                <button type="button" id="btnSaveForm" class="btn btn-sm btn-dark" onclick="saveCustomFormDetails();">Save</button>
+                <button type="button" class="btn btn-sm btn-gray pointer DynamicTemplateNextBtn" id="btnSaveNextForm" onclick="redirectToNextCustomFormPageById()"> Save & Next</button>
+                <button type="button" id="btnClearForm" class="btn btn-sm btn-gray" onclick="commonClearFormData();">Clear</button>
+                <button type="button" id="btnPrintForm" class="btn btn-sm btn-gray" onclick="print_In_Depth_AssessmentDetails();">Print</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        //checkUserRolesAndPrivilegeForCustomForm("divCustomFormButtons");
+        //$("#PEGPainScreening :text,#PEGPainScreening :radio").addClass("CustomForm_charting_10070");
+        //$("#hdnCfCustomFormGetSpName").val("USP_CustomForms_GetSubCustomForms_PEGPainScreening");
+        //$("#hdnCfCustomFormSaveSpName").val("USP_CustomForms_InsertUpdateSubCF_PEGPainScreening");
+        //$("#hdnCfFormDivId").val("PEGPainScreening");
+        //$("#hdnCfIsRadio").val(true);
+        //$("#hdnCfIsTextBox").val(true);
+        //$("#hdnCfIsTextArea").val(false);
+        //$("#hdnCfIsCheckbox").val(false);
+        //$("#hdnCfIsDropdown").val(false);
+        //$("#hdnCfIsSingleCheck").val(false);
+        //$("#hdnCfIsMultiDropdown").val(false);
+        //$("#hdnCfIsPlusMinus").val(false);
+        getFormDetails();
+    });
+    function CalculateScore() {
+        var average = 0;
+        var total = 0;
+        $(".PEG:checked").each(function () {
+            total += Number($(this).val());
+            average = Number((total) / 3).toFixed(0);
+        });
+        $("#FinalScore").val(average);
+    }
+</script>
+
