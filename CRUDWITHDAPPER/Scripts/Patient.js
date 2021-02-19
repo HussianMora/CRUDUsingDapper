@@ -1,4 +1,10 @@
 ﻿$(document).ready(function () {
+    debugger;
+    $('#DataTable').DataTable({
+        "searching": true,
+        "ordering": true,
+        "pagingType": "full_numbers"
+    });
     $('[data-toggle="popover"]').popover({
         title: setPopoverData,
         html: true,
