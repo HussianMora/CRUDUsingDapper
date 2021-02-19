@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using CRUDWITHDAPPER.Models;
+using CRUDWITHDAPPER.PatientBL;
+using System.Web.Security;
 
 namespace CRUDWITHDAPPER.Controllers
 {
@@ -17,9 +19,11 @@ namespace CRUDWITHDAPPER.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly IPatientDAL _patientDAL;
 
         public AccountController()
         {
+            _patientDAL = new PatientDAL();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -57,8 +61,18 @@ namespace CRUDWITHDAPPER.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            LoginViewModel model = new LoginViewModel();
+            if (Request.Cookies["login"] != null)
+            {
+                model.Name = Request.Cookies["Login"].Values["Name"];
+                model.Password = Request.Cookies["Login"].Values["Password"];
+                Session["Patient_Id"] = Int32.Parse(Request.Cookies["Login"].Values["Patient_Id"]);
+                return RedirectToAction("PatientHomePage","Patient");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         //
@@ -66,29 +80,36 @@ namespace CRUDWITHDAPPER.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+            LoginViewModel login=_patientDAL.LoginPatient(model);
+            if (login != null)
             {
-                return View(model);
+                FormsAuthentication.SetAuthCookie(login.Name, login.RememberMe);
+                Session["Patient_Id"] = login.Patient_Id;
+                if (model.RememberMe)
+                {
+                    HttpCookie cookie = new HttpCookie("Login");
+                    cookie.Values.Add("Name", login.Name);
+                    cookie.Values.Add("Password", login.Password);
+                    cookie.Values.Add("Patient_Id", login.Patient_Id.ToString());
+                    cookie.Expires = DateTime.Now.AddDays(15);
+                    Response.Cookies.Add(cookie);
+                }
+                return RedirectToAction("PatientHomePage", "Patient");
             }
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            else
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                ViewBag.Error = "Incorrect Username or Password";
+                return View();
             }
+        }
+        [AllowAnonymous]
+        public ActionResult Logout()
+        {
+            Session.Remove("Patient_Id");
+            Response.Cookies["Login"].Expires = DateTime.Now.AddDays(-1);
+            return RedirectToAction("PatientHomePage", "Patient");
         }
 
         //
@@ -134,42 +155,21 @@ namespace CRUDWITHDAPPER.Controllers
             }
         }
 
-        //
-        // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
 
-        //
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public JsonResult Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            _patientDAL.RegisterPatient(model);
+            return Json(new
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return RedirectToAction("Index", "Home");
-                }
-                AddErrors(result);
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+                redirectTo = Url.Action("Login", "Account"),
+            }, JsonRequestBehavior.AllowGet);
         }
 
         //

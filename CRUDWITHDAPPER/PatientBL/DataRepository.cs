@@ -92,6 +92,11 @@ namespace CRUDWITHDAPPER.PatientBL
             return SqlMapper.Query<PatientInfo>(_con, spName, patient_id, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
+        public LoginViewModel GetCredentials(object param, string spName)
+        {
+            return SqlMapper.Query<LoginViewModel>(_con, spName, param, commandType: CommandType.StoredProcedure).FirstOrDefault();
+        }
+
 
         #endregion
 

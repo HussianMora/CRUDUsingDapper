@@ -6,55 +6,82 @@
 <div class="container">
     <h2>Patients Record</h2>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">Add New Patient</button><br /><br />
-    <button type="button" class="btn btn-info" onclick="ExportToExcel();">Export To Excel</button><br /><br />
+    <button type="button" class="btn btn-info" onclick="location.href='@Url.Action("ExportExcel", "Patient")'">Export To Excel</button><br /><br />
     @*<button type="button" class="btn btn-info" onclick="PatientSearch();">Export To Excel</button><br /><br />*@
 </div>
+<div id="myPopoverContent" style="display:none">
+    <table border="1" style="width:100%">
+        <tr>
+            <td>Jill</td>
+            <td>Smith</td>
+            <td>50</td>
+        </tr>
+        <tr>
+            <td>Eve</td>
+            <td>Jackson</td>
+            <td>94</td>
+        </tr>
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>80</td>
+        </tr>
+    </table>
+    </div>
 
-<div id="getPatients">
+    <div id="getPatients">
 
-</div>
+    </div>
 
-<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
-    <img src=~/Images/ajax-loader.gif width="64" height="64" /><br>Loading..
-</div>
+    <div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;">
+        <img src=~/Images/ajax-loader.gif width="64" height="64" /><br>Loading..
+    </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" id="btnUpperClose">×</button>
-                <h4 class="modal-title" id="myModalLabel">Add Patient</h4>
-            </div>
-            <div class="modal-body">
-                <form id="frmPatient" method="post">
-                    <input type="hidden" id="Patient_Id" name="Patient_Id" />
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Mobile_No, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.EditorFor(model => model.Mobile_No, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Mobile_No, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <input type="button" value="Save" class="btn btn-primary" id="btnAddUpdate" />
-                <input type="reset" value="Reset" class="btn btn-default" id="btnReset" />
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnClose">Close</button>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" id="btnUpperClose">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Add Patient</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="frmPatient" method="post">
+                        <input type="hidden" id="Patient_Id" name="Patient_Id" />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Mobile_No, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.EditorFor(model => model.Mobile_No, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Mobile_No, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" value="Save" class="btn btn-primary" id="btnAddUpdate" />
+                    <input type="reset" value="Reset" class="btn btn-default" id="btnReset" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btnClose">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+<script>
+    $(document).ready(function () {
+    debugger;
+    LoadData();
+    $('#DOB').datetimepicker();
+    });
+</script>
+@Scripts.Render("~/bundles/patient")

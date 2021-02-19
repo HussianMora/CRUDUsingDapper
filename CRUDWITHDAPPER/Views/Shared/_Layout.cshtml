@@ -6,6 +6,9 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/patient")*@
+    @Scripts.Render("~/bundles/bootstrap")
     @*@Scripts.Render("~/bundles/patient")*@
     @*<link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
     <link href="~/Content/toastr.min.css" rel="stylesheet" />*@
@@ -28,6 +31,7 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>@Html.ActionLink("PEG", "ViewPEG", "Patient")</li>
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -41,10 +45,6 @@
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/patient")
-    @Scripts.Render("~/bundles/bootstrap")
     @*<script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
     @*<script src="~/Scripts/Patient.js"></script>*@

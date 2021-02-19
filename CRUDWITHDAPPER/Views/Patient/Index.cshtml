@@ -1,13 +1,13 @@
 ﻿@model  IEnumerable<CRUDWITHDAPPER.Models.PatientInfo>
 @{
-    Layout = null;
 }
+<script src="~/Scripts/Patient.js"></script>
 
 
-<table class="table" border="1">
+<table class="table" border="1" id="DataTable">
     <tr>
         <th>
-            @*@Html.DisplayNameFor(model => model.Name)*@
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Mobile_No)
@@ -17,6 +17,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            <label>Details</label>
         </th>
         <th></th>
     </tr>
@@ -37,10 +40,16 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
+                <a href="#" data-toggle="popover" data-trigger="focus" id="@item.Patient_Id">Details</a>
+            </td>
+            <td>
                 <a class="btn btn-primary" onclick="GetPatient('@item.Patient_Id')">Edit</a>
                 <a class="btn btn-danger" onclick="DeletePatient('@item.Patient_Id')">Delete</a>
+                <i class="fa fa-info-circle" style="font-size:48px;color:blue"></i>
             </td>
         </tr>
     }
 
 </table>
+@Scripts.Render("~/bundles/patient")
+

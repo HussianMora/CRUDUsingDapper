@@ -22,5 +22,7 @@ namespace CRUDWITHDAPPER.PatientBL
 
         object getCustomForm(object patient_id, string spName);
 
+        LoginViewModel GetCredentials(object param, string spName);
+
     }
 }

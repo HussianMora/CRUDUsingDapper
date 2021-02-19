@@ -96,5 +96,40 @@ namespace CRUDWITHDAPPER.PatientBL
 
         }
 
+        public void RegisterPatient(RegisterViewModel patient)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                param.Add("@Name", patient.Name);
+                param.Add("@Email", patient.Email);
+                param.Add("@DOB", patient.DOB);
+                param.Add("@Password", patient.Password);
+                param.Add("@RememberMe", 0);
+                _dataRepositoty.CommonSavePatient(param, "USP_RegisterPatient");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public LoginViewModel LoginPatient(LoginViewModel patient)
+        {
+            try
+            {
+                DynamicParameters param = new DynamicParameters();
+                param.Add("@Name", patient.Name);
+                param.Add("@Password", patient.Password);
+                LoginViewModel login=_dataRepositoty.GetCredentials(param, "USP_LoginPatient");
+                return login;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

@@ -37,6 +37,7 @@ namespace CRUDWITHDAPPER
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
+                       "~/Content/PatientHomePage.css",
                       "~/Content/toastr.min.css",
                        "~/Content/bootstrap-datepicker.min.css", 
                       "~/Content/bootstrap-datetimepicker.min.css"));

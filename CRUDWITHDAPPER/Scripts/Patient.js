@@ -1,12 +1,35 @@
 ﻿$(document).ready(function () {
-    debugger;
-    LoadData();
-    getFormDetails();
-    $('#DOB').datetimepicker();
+    $('[data-toggle="popover"]').popover({
+        title: setPopoverData,
+        html: true,
+        placement: 'right'
+    });
+    function setPopoverData(id) {
+        var set_data = '';
+        var element = $(this);
+        var id = element.attr("id");
+        $.ajax({
+            url: "/Patient/PatientPopoverDetails",
+            method: "post",
+            async: false,
+            data: { id: id },
+            success: function (data) {
+                set_data = '<div class="container">';
+                set_data += ' <ul class="list-group">';
+                set_data += '<li class="list-group-item">' + data.Patient_Id + '</li>';
+                set_data += '<li class="list-group-item">' + data.Name + '</li>';
+                set_data += '<li class="list-group-item">' + GetDateInFormat(data.DOB) + '</li>';
+                set_data += '<li class="list-group-item">' + data.Mobile_No + '</li>';
+                set_data += '<li class="list-group-item">' + data.Email + '</li>';
+                set_data += '</ul>';
+                set_data += '</div>';
+            }
+        });
+        return set_data;
+    }
 });
 
 $("#btnAddUpdate").click(function () {
-    debugger;
     var formdata = {
         Patient_Id: $('#Patient_Id').val(),
         Name: $('#Name').val(),
@@ -14,13 +37,12 @@ $("#btnAddUpdate").click(function () {
         Mobile_No: $('#Mobile_No').val(),
         Email: $('#Email').val(),
     };
-    //var formdata = new FormData($("#frmPatient")[0]);
     $('#myModal').modal('hide');
     $("#wait").show();
     $.ajax({
         type: "POST",
         url: '/Patient/AddUpdatePatient',
-        data:JSON.stringify({formdata: formdata}),
+        data: JSON.stringify({ formdata: formdata }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (result) {
@@ -30,8 +52,8 @@ $("#btnAddUpdate").click(function () {
             $('#frmPatient')[0].reset();
             LoadData();
         }
-});
-    
+    });
+
 });
 function getBaselocation(url) {
     return "/" + url;
@@ -65,7 +87,6 @@ $('#btnUpperClose').click(function () {
 });
 
 function DeletePatient(id) {
-    debugger;
     if (confirm("Are you sure do you want to delete?")) {
         $("#wait").show();
         $.ajax({
@@ -94,7 +115,6 @@ function GetPatient(id) {
         url: "/Patient/GetPatient",
         data: { id: id },
         success: function (result) {
-            debugger;
             $('#Name').val(result.Name);
             $('#Mobile_No').val(result.Mobile_No);
             $('#DOB').val(GetDateInFormat(result.DOB));
@@ -116,7 +136,6 @@ function ExportToExcel() {
         type: "POST",
         url: "/Patient/ExportRecordsToExcel",
         success: function (result) {
-            debugger;
             toastr.success("Records Exported Successfully");
 
         },
@@ -131,7 +150,6 @@ $(document).ready(function () {
 });
 
 function GetDateInFormat(dt) {
-    debugger;
     dt = new Date(parseInt(dt.substr(6)));
     var res = "";
     if ((dt.getMonth() + 1).toString().length < 2)
@@ -148,7 +166,6 @@ function GetDateInFormat(dt) {
 }
 
 //$("#btnSearch").click(function () {
-//    debugger;
 //    $("#wait").show();
 //    var value = $("#Search").val();
 //    $.ajax({
@@ -167,12 +184,10 @@ function GetDateInFormat(dt) {
 function PatientSearch() {
     $("#wait").show();
     var value = $("#Search").val();
-    debugger;
     $.ajax({
         type: "POST",
         url: "/Patient/ExportRecordsToExcel",
         success: function (result) {
-            debugger;
             toastr.success("Records Exported Successfully");
 
         },
@@ -182,8 +197,7 @@ function PatientSearch() {
     });
 }
 
-function saveCustomFormDetails()
-{
+function saveCustomFormDetails() {
     var formdata = {
         Patient_Id: $('#Patient_Id').val(),
         AveragePain: $('#AveragePain').val(),
@@ -223,21 +237,17 @@ function getCustomFormDetails() {
     });
 }
 
-function getFormDetails()
-{
-    debugger;
+function getFormDetails() {
     $("#wait").show();
     $.ajax({
         type: 'GET',
         url: "/Patient/CommonGetCustomFormDetails",
         success: function (data) {
-            debugger;
             $("#wait").hide();
             $('#AveragePain').val(data[0].AveragePain);
             $('#EnjoyementOfLife').val(data[0].EnjoyementOfLife);
             $('#GeneralActivity').val(data[0].GeneralActivity);
             $('#FinalScore').val(data[0].FinalScore);
-            //$("#getPatients").html(data);
         },
         error: function (ex) {
             $("#wait").hide();
@@ -245,5 +255,124 @@ function getFormDetails()
     });
 }
 
+function registerPatient() {
+    if (valRegister()) {
+        //var formdata = {
+        //    Name: $('#Name').val(),
+        //    Email: $('#Email').val(),
+        //    DOB: $('#DOB').val(),
+        //    Password: $('#Password').val()
+        //}
+        var formData = new FormData();
+        formData.append("Name", $("#Name").val());
+        formData.append("Email", $("#Email").val());
+        formData.append("DOB", $("#DOB").val());
+        formData.append("Password", $("#Password").val());
+        $.ajax({
+            type: "POST",
+            url: "/Account/Register",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (result) {
+                setTimeout(function () {
+                    window.location.href = result.redirectTo;
+                }, 500);
+                toastr.success("Patient Registered Successfully");
+            }
+        });
+    };
+}
+
+function valRegister() {
+    if ($('#Name').val() == '') {
+        toastr.warning("Name cannot be blank");
+        return false;
+    }
+    valEmail = validateEmail();
+    if (valEmail == 0) {
+        toastr.warning("Please Enter Email Address");
+        return false;
+    }
+    if (valEmail == 2) {
+        toastr.warning("Please Enter Correct Email Address");
+        return false;
+    }
+    if ($('#DOB').val() == '') {
+        toastr.warning("Date cannot be blank");
+        return false;
+    }
+    valPass = valPassword();
+    if (valPass == 0) {
+        toastr.warning("Password cannot be blank");
+        return false;
+    }
+    if (valPass == 1) {
+        toastr.warning("Password lenght cannot be less than 8");
+        return false;
+    }
+    if (valPass == 2) {
+        toastr.warning("Password must contain atleast one upper case ,lower case and number");
+        return false;
+    }
+    if (valPass == 3) {
+        toastr.warning("Password must contain one special character");
+        return false;
+    }
+    confrmPass = confirmPassword();
+    if (confrmPass == 0) {
+        toastr.warning("Please Confirm Password");
+        return false;
+    }
+    if (confrmPass == 1) {
+        toastr.warning("Password doesn't match");
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+function validateEmail() {
+    if ($('#Email').val() == '') {
+        return 0;
+    }
+    var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (filter.test($('#Email').val())) {
+        return 1;
+    }
+    else {
+        return 2;
+    }
+}
+
+function valPassword() {
+    if ($('#Password').val() == '') {
+        return 0;
+    }
+    a = $('#Password').val();
+    if (a.length < 8) {
+        return 1;
+    }
+    if (!$('#Password').val().match(/([a-z])/) || !$('#Password').val().match(/([0-9])/) || !$('#Password').val().match(/([A-Z])/)) {
+        return 2;
+    }
+    if (!$('#Password').val().match(/([!,%,&,@,#,$,^,*,?,_,~])/)) {
+        return 3;
+    }
+}
+
+function confirmPassword() {
+    if ($('#ConfirmPassword').val() == '') {
+        return 0;
+    }
+    if ($('#Password').val() != $('#ConfirmPassword').val()) {
+        return 1;
+    }
+}
+
+function myFunction() {
+    var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+}
 
 

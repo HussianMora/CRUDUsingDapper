@@ -367,32 +367,6 @@
         </div>
     </form>
 </div>
-<script>
-    $(document).ready(function () {
-        debugger;
-        //checkUserRolesAndPrivilegeForCustomForm("divCustomFormButtons");
-        //$("#PEGPainScreening :text,#PEGPainScreening :radio").addClass("CustomForm_charting_10070");
-        //$("#hdnCfCustomFormGetSpName").val("USP_CustomForms_GetSubCustomForms_PEGPainScreening");
-        //$("#hdnCfCustomFormSaveSpName").val("USP_CustomForms_InsertUpdateSubCF_PEGPainScreening");
-        //$("#hdnCfFormDivId").val("PEGPainScreening");
-        //$("#hdnCfIsRadio").val(true);
-        //$("#hdnCfIsTextBox").val(true);
-        //$("#hdnCfIsTextArea").val(false);
-        //$("#hdnCfIsCheckbox").val(false);
-        //$("#hdnCfIsDropdown").val(false);
-        //$("#hdnCfIsSingleCheck").val(false);
-        //$("#hdnCfIsMultiDropdown").val(false);
-        //$("#hdnCfIsPlusMinus").val(false);
-        getFormDetails();
-    });
-    function CalculateScore() {
-        var average = 0;
-        var total = 0;
-        $(".PEG:checked").each(function () {
-            total += Number($(this).val());
-            average = Number((total) / 3).toFixed(0);
-        });
-        $("#FinalScore").val(average);
-    }
-</script>
-
+@section Scripts {
+    @Scripts.Render("~/bundles/patient")
+}

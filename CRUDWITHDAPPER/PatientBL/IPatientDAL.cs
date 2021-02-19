@@ -25,6 +25,10 @@ namespace CRUDWITHDAPPER.PatientBL
 
         DataTable GetCustomFormDetails(int patientId, string storedProcedure);
 
+        void RegisterPatient(RegisterViewModel patient);
+
+        LoginViewModel LoginPatient(LoginViewModel patient);
+
 
 
 

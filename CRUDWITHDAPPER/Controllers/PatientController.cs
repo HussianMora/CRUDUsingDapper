@@ -1,9 +1,12 @@
 ﻿using CRUDWITHDAPPER.Models;
 using CRUDWITHDAPPER.PatientBL;
 using Newtonsoft.Json;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,10 +25,6 @@ namespace CRUDWITHDAPPER.Controllers
         {
             _patientDAL = new PatientDAL();
         }
-        //public PatientController(IPatientDAL patientDAL)
-        //{
-        //    _patientDAL = patientDAL;
-        //}
 
         public ActionResult Index(string search)
         {
@@ -43,7 +42,14 @@ namespace CRUDWITHDAPPER.Controllers
 
         public ActionResult PatientHomePage()
         {
-            return View();
+            if (Session["Patient_Id"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -51,29 +57,12 @@ namespace CRUDWITHDAPPER.Controllers
         {
             try
             {
-                //Dictionary<string, string> EmployeeList = new Dictionary<string, string>();
-                //EmployeeList.Add("Patient_Id", "0");
-                //EmployeeList.Add("Name", "Mike");
-                //EmployeeList.Add("Mobile_No", "369852147");
-                //EmployeeList.Add("DOB", "02/02/2002");
-                //EmployeeList.Add("Email", "test22@gmail.com");
-                //var patientInfo = ToObject<PatientInfo>(formdata);
-
-                //PatientInfo pi = new PatientInfo
-                //{
-                //    Patient_Id = patientInfo.Patient_Id,
-                //    DOB=patientInfo.DOB,
-                //    Email=patientInfo.Email,
-                //    Mobile_No=patientInfo.Mobile_No,
-                //    Name=patientInfo.Name
-                //};
                 System.Xml.Linq.XElement el = new System.Xml.Linq.XElement("PatientInfo",formdata.Select(kv => new System.Xml.Linq.XElement(kv.Key, kv.Value)));
                 var xml = el.ToString();
                 XMlClass xMLClass = new XMlClass
                 {
                     PatietXML = xml,
                 };
-                //formdata.PatietXML = ObjectToXMLGeneric(formdata);
                 _patientDAL.InsertUpdatePatient(xMLClass, "sp_InsertUpdatePEG");
                 return Json("Data Saved Successfully");
             }
@@ -113,31 +102,19 @@ namespace CRUDWITHDAPPER.Controllers
             }
         }
 
-        //private static T DictionaryToObject<T>(IDictionary<string, string> dict) where T : new()
-        //{
-        //    var t = new T();
-        //    PropertyInfo[] properties = t.GetType().GetProperties();
+        public JsonResult PatientPopoverDetails(int id)
+        {
+            try
+            {
+                var patient = _patientDAL.GetPatientById(id);
+                return Json(patient);
+            }
+            catch (Exception ex)
+            {
 
-        //    foreach (PropertyInfo property in properties)
-        //    {
-        //        if (!dict.Any(x => x.Key.Equals(property.Name, StringComparison.InvariantCultureIgnoreCase)))
-        //            continue;
-
-        //        KeyValuePair<string, string> item = dict.First(x => x.Key.Equals(property.Name, StringComparison.InvariantCultureIgnoreCase));
-
-        //        // Find which property type (int, string, double? etc) the CURRENT property is...
-        //        Type tPropertyType = t.GetType().GetProperty(property.Name).PropertyType;
-
-        //        // Fix nullables...
-        //        Type newT = Nullable.GetUnderlyingType(tPropertyType) ?? tPropertyType;
-
-        //        // ...and change the type
-        //        //object newA = Convert.ChangeType(item.Value, newT);
-        //        //t.GetType().GetProperty(property.Name).SetValue(t, newA, null);
-        //    }
-        //    return t;
-        //}
-
+                throw ex;
+            }
+        }
         public static T ToObject<T>(IDictionary<string, string> source)
         where T : class, new()
         {
@@ -185,7 +162,7 @@ namespace CRUDWITHDAPPER.Controllers
         {
             try
             {
-                int Patient_Id = 2;
+                int Patient_Id = Int32.Parse(Session["Patient_id"].ToString());
                 var subBaseModel = _patientDAL.GetCustomFormDetails(Patient_Id, "sp_GetPEG");
                 var submodeldict = GetDataTableDictionaryList(subBaseModel);
                 return Json(submodeldict, JsonRequestBehavior.AllowGet);
@@ -246,129 +223,44 @@ namespace CRUDWITHDAPPER.Controllers
                 }
             }
         }
-        //public JsonResult ExportRecordsToExcel()
-        //{
-        //    //var gv = new GridView();
-        //    //gv.DataSource =patientDAL.GetPatientRecords();
-        //    //gv.DataBind();
-        //    //Response.ClearContent();
-        //    //Response.Buffer = true;
-        //    //Response.AddHeader("content-disposition", "attachment; filename=PatientRecords.xls");
-        //    //Response.ContentType = "application/ms-excel";
-        //    //Response.Charset = "";
-        //    //StringWriter objStringWriter = new StringWriter();
-        //    //HtmlTextWriter objHtmlTextWriter = new HtmlTextWriter(objStringWriter);
-        //    //gv.RenderControl(objHtmlTextWriter);
-        //    //Response.Output.Write(objStringWriter.ToString());
-        //    //Response.Flush();
-        //    //Response.End();
-        //    //GridView gridview = new GridView();
-        //    //gridview.DataSource = patientDAL.GetPatientRecords();
-        //    //gridview.DataBind();
+        public void ExportExcel()
+        {
 
-        //    //// Clear all the content from the current response
-        //    //Response.ClearContent();
-        //    //Response.Buffer = true;
-        //    //// set the header
-        //    //Response.AddHeader("content-disposition", "attachment;filename = Records.xls");
-        //    //Response.ContentType = "application/ms-excel";
-        //    //Response.Charset = "";
-        //    //// create HtmlTextWriter object with StringWriter
-        //    //using (StringWriter sw = new StringWriter())
-        //    //{
-        //    //    using (HtmlTextWriter htw = new HtmlTextWriter(sw))
-        //    //    {
-        //    //        // render the GridView to the HtmlTextWriter
-        //    //        gridview.RenderControl(htw);
-        //    //        // Output the GridView content saved into StringWriter
-        //    //        Response.Output.Write(sw.ToString());
-        //    //        Response.Flush();
-        //    //        Response.End();
-        //    //    }
-        //    //}
-        //    var products = new System.Data.DataTable("teste");
-        //    products.Columns.Add("col1", typeof(int));
-        //    products.Columns.Add("col2", typeof(string));
+            List<PatientInfo> patients = _patientDAL.GetPatients<PatientInfo>();
 
-        //    products.Rows.Add(1, "product 1");
-        //    products.Rows.Add(2, "product 2");
-        //    products.Rows.Add(3, "product 3");
-        //    products.Rows.Add(4, "product 4");
-        //    products.Rows.Add(5, "product 5");
-        //    products.Rows.Add(6, "product 6");
-        //    products.Rows.Add(7, "product 7");
+            ExcelPackage pck = new ExcelPackage();
+            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("PatientList");
+            ws.Cells["A1:E1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            ws.Cells["A1:E1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(string.Format("Yellow")));
+            for (int i = 1; i <= patients.Count()+1; i++)
+            {
+                ws.Cells["A" + i + ":" + "E" + i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                ws.Cells["A" + i + ":" + "E" + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                ws.Cells["A" + i + ":" + "E" + i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                ws.Cells["A" + i + ":" + "E" + i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            }
+            ws.Cells["A1"].Value = "Id";
+            ws.Cells["B1"].Value = "Name";
+            ws.Cells["C1"].Value = "MobileNo";
+            ws.Cells["D1"].Value = "DOB";
+            ws.Cells["E1"].Value = "Email";
 
-
-        //    var grid = new GridView();
-        //    grid.DataSource = products;
-        //    grid.DataBind();
-
-        //    Response.ClearContent();
-        //    Response.Buffer = true;
-        //    Response.AddHeader("content-disposition", "attachment; filename=MyExcelFile.xls");
-        //    Response.ContentType = "application/ms-excel";
-
-        //    Response.Charset = "";
-        //    StringWriter sw = new StringWriter();
-        //    HtmlTextWriter htw = new HtmlTextWriter(sw);
-
-        //    grid.RenderControl(htw);
-
-        //    Response.Output.Write(sw.ToString());
-        //    Response.Flush();
-        //    Response.End();
-
-
-        //    return Json("ÏmportSuccess");
-
-        //}
-
-        //public JsonResult ExportRecordsToExcelUsingSyncfusion()
-        //{
-        //    // Create an instance of ExcelEngine
-        //    using (ExcelEngine excelEngine = new ExcelEngine())
-        //    {
-        //        //Initialize Application
-        //        IApplication application = excelEngine.Excel;
-
-        //        //Set the default application version as Excel 2016
-        //        application.DefaultVersion = ExcelVersion.Excel2016;
-
-        //        //Create a workbook with a worksheet
-        //        IWorkbook workbook = application.Workbooks.Create(1);
-
-        //        //Access first worksheet from the workbook instance
-        //        IWorksheet worksheet = workbook.Worksheets[0];
-
-        //        //Export data to Excel
-        //        DataTable dataTable = GetDataTable();
-        //        worksheet.ImportDataTable(dataTable, true, 1, 1);
-        //        worksheet.UsedRange.AutofitColumns();
-
-        //        //Save the workbook to disk in xlsx format
-        //        workbook.SaveAs("Output.xlsx", ExcelSaveType.SaveAsXLS, HttpContext.ApplicationInstance.Response, ExcelDownloadType.Open);
-        //        return Json("ÏmportSuccess");
-        //    }
-
-        //}
-
-        //private static DataTable GetDataTable()
-        //{
-        //    //Create a DataTable with four columns
-        //    DataTable table = new DataTable();
-        //    table.Columns.Add("Dosage", typeof(int));
-        //    table.Columns.Add("Drug", typeof(string));
-        //    table.Columns.Add("Patient", typeof(string));
-        //    table.Columns.Add("Date", typeof(DateTime));
-
-        //    //Add five DataRows
-        //    table.Rows.Add(25, "Indocin", "David", DateTime.Now);
-        //    table.Rows.Add(50, "Enebrel", "Sam", DateTime.Now);
-        //    table.Rows.Add(10, "Hydralazine", "Christoff", DateTime.Now);
-        //    table.Rows.Add(21, "Combivent", "Janet", DateTime.Now);
-        //    table.Rows.Add(100, "Dilantin", "Melanie", DateTime.Now);
-
-        //    return table;
-        //}
+            int row = 2;
+            foreach (var item in patients)
+            {
+                ws.Cells[string.Format("A{0}", row)].Value = item.Patient_Id;
+                ws.Cells[string.Format("B{0}", row)].Value = item.Name;
+                ws.Cells[string.Format("C{0}", row)].Value = item.Mobile_No;
+                ws.Cells[string.Format("D{0}", row)].Value = item.DOB;
+                ws.Cells[string.Format("E{0}", row)].Value = item.Email;
+                row++;
+            }
+            ws.Cells["A:AZ"].AutoFitColumns();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment; filename=PatientList.xlsx");
+            Response.BinaryWrite(pck.GetAsByteArray());
+            Response.End();
+        }
     }
 }
