@@ -1,9 +1,4 @@
 ﻿$(document).ready(function () {
-    $('#DataTable').DataTable({
-        "searching": true,
-        "ordering": true,
-        "pagingType": "full_numbers"
-    });
     $('[data-toggle="popover"]').popover({
         title: setPopoverData,
         html: true,
@@ -19,13 +14,15 @@
             async: false,
             data: { id: id },
             success: function (data) {
+                var item1 = data.Item1[0];
+                var item2 = data.Item2[0];
                 set_data = '<div class="container">';
                 set_data += ' <ul class="list-group">';
-                set_data += '<li class="list-group-item">' + data.Patient_Id + '</li>';
-                set_data += '<li class="list-group-item">' + data.Name + '</li>';
-                set_data += '<li class="list-group-item">' + GetDateInFormat(data.DOB) + '</li>';
-                set_data += '<li class="list-group-item">' + data.Mobile_No + '</li>';
-                set_data += '<li class="list-group-item">' + data.Email + '</li>';
+                set_data += '<li class="list-group-item"> Patient_Id:' + item1.Patient_Id + '</li>';
+                set_data += '<li class="list-group-item">Name:' + item1.Name + '</li>';
+                set_data += '<li class="list-group-item">DOB:' + GetDateInFormat(item2.DOB) + '</li>';
+                set_data += '<li class="list-group-item">Mobile No:' + item1.Mobile_No + '</li>';
+                set_data += '<li class="list-group-item">Email:' + item2.Email + '</li>';
                 set_data += '</ul>';
                 set_data += '</div>';
             }

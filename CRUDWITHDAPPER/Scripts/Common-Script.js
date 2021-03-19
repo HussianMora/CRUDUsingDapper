@@ -1,6 +1,5 @@
 ﻿//Model For Confirmation Popup
 function showConfirmation(confirmationTitle, confirmationMsg, okMethod, cancelMethod, okMethodParam, cancelMethodParam, isSmallBox, istopHeight, okButtonText, cancelButtonText, isButtonleftalign) {
-    debugger;
     $('.custom-modal').remove();
     var closeButton = '<button type="button" class="close btnConfirmationClose" data-dismiss="modal" aria-label="Close">' +
                                         '<span aria-hidden="true">&times;</span>' +
@@ -61,7 +60,6 @@ function showConfirmation(confirmationTitle, confirmationMsg, okMethod, cancelMe
 }
 
 function blockPage() {
-    debugger;
     $.blockUI({
         message: '<div style="padding: 0px; background: transparent;"><i class="fa fa-spinner fa-pulse fa-3x" ></i></div>', //'<div style="color:#337ab7;"><div><img src="../../Images/loader.gif"/></div><strong>Loading...</strong></div>',
         css: {
@@ -77,6 +75,5 @@ function blockPage() {
     });
 }
 function unblockPage() {
-    debugger;
     $.unblockUI();
 }

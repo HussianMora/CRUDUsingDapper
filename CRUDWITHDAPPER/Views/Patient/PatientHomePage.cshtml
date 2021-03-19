@@ -64,8 +64,14 @@
 
 <script>
     $(document).ready(function () {
-    debugger;
     LoadData();
+    setTimeout(function () {
+        $('#DataTable').DataTable({
+            "searching": true,
+            "ordering": true,
+            "pagingType": "full_numbers"
+        });
+    }, 2000);
     $('.date-picker').datetimepicker();
     });
 </script>
