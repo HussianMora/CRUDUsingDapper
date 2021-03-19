@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    debugger;
     $('#DataTable').DataTable({
         "searching": true,
         "ordering": true,
