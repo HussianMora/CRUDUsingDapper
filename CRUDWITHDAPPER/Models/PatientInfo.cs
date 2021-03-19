@@ -19,5 +19,20 @@ namespace CRUDWITHDAPPER.Models
         public string PatietXML { get; set; }
     }
 
+    public class PatientDetails1
+    {
+        public int Patient_Id { get; set; }
+        public string Name { get; set; }
+        public Int64 Mobile_No { get; set; }
+       
+    }
+
+    public class PatientDetails2
+    {
+        public DateTime DOB { get; set; }
+        public string Email { get; set; }
+
+    }
+
 
 }

@@ -60,12 +60,14 @@ function getBaselocation(url) {
 }
 
 function LoadData() {
-    $("#wait").show();
+    blockPage();
+    $(".loader").show();
     $.ajax({
         type: 'GET',
         url: "/Patient/Index",
         success: function (data) {
-            $("#wait").hide();
+            unblockPage();
+            $(".loader").hide();
             $("#getPatients").html(data);
         },
         error: function (ex) {
@@ -87,7 +89,7 @@ $('#btnUpperClose').click(function () {
 });
 
 function DeletePatient(id) {
-    if (confirm("Are you sure do you want to delete?")) {
+    showConfirmation("", "Are you sure do you want to delete?", function () {
         $("#wait").show();
         $.ajax({
             type: "POST",
@@ -105,7 +107,9 @@ function DeletePatient(id) {
                 $("#wait").hide();
             }
         });
-    }
+    }, function () {
+        return false;
+    });
 }
 
 function GetPatient(id) {
@@ -115,11 +119,13 @@ function GetPatient(id) {
         url: "/Patient/GetPatient",
         data: { id: id },
         success: function (result) {
-            $('#Name').val(result.Name);
-            $('#Mobile_No').val(result.Mobile_No);
-            $('#DOB').val(GetDateInFormat(result.DOB));
-            $('#Email').val(result.Email);
-            $('#Patient_Id').val(result.Patient_Id);
+            var item1 = result.Item1[0];
+            var item2 = result.Item2[0];
+            $('#Name').val(item1.Name);
+            $('#Mobile_No').val(item1.Mobile_No);
+            $('#DOB').val(GetDateInFormat(item2.DOB));
+            $('#Email').val(item2.Email);
+            $('#Patient_Id').val(item1.Patient_Id);
             $('#myModal').modal('show');
             $('#btnAdd').hide();
         },
@@ -164,22 +170,6 @@ function GetDateInFormat(dt) {
     res += "/" + dt.getFullYear().toString();
     return res;
 }
-
-//$("#btnSearch").click(function () {
-//    $("#wait").show();
-//    var value = $("#Search").val();
-//    $.ajax({
-//        type: "POST",
-//        url: "/Patient/Index",
-//        data: value,
-//        success: function (data) {
-//            $("#wait").hide();
-//            $("#getPatients").html(data);
-//        },
-//        error: function () {
-//        }
-//    });
-//});
 
 function PatientSearch() {
     $("#wait").show();
@@ -257,12 +247,6 @@ function getFormDetails() {
 
 function registerPatient() {
     if (valRegister()) {
-        //var formdata = {
-        //    Name: $('#Name').val(),
-        //    Email: $('#Email').val(),
-        //    DOB: $('#DOB').val(),
-        //    Password: $('#Password').val()
-        //}
         var formData = new FormData();
         formData.append("Name", $("#Name").val());
         formData.append("Email", $("#Email").val());
@@ -375,4 +359,33 @@ function myFunction() {
     popup.classList.toggle("show");
 }
 
+function openQuickAddPatientPopup() {
+    var modalNarrativesPHQ9 = $("#modalNarratives");
+    $("#modalBodyNarratives").load('/Patient/QuickAddPatient', function () {
+        modalNarrativesPHQ9.modal('show');
+    });
+}
+
+function quickAddPatient() {
+    var formdata = {
+        Name: $('#QA_Name').val(),
+        DOB: $('#QA_DOB').val(),
+    };
+    $('#modalNarratives').modal('hide');
+    $("#wait").show();
+    $.ajax({
+        type: "POST",
+        url: '/Patient/AddUpdatePatient',
+        data: JSON.stringify({ formdata: formdata }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (result) {
+            toastr.success(result, "Patient Record");
+            $('#Patient_Id').val("");
+            $("#wait").hide();
+            $('#frmPatient')[0].reset();
+            LoadData();
+        }
+    });
+}
 

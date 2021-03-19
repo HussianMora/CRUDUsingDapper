@@ -15,8 +15,11 @@ namespace CRUDWITHDAPPER
                         ));
             bundles.Add(new ScriptBundle("~/bundles/patient").Include(
                          "~/Scripts/Patient.js",
+                          "~/Scripts/Common-Script.js",
                        "~/Scripts/bootstrap-datetimepicker.min.js",
+                        "~/Scripts/bootstrap-datepicker.min.js",
                        "~/Scripts/bootstrap-datetimepicker.min.js",
+                       "~/Scripts/jquery.blockUI.js",
                         "~/Scripts/toastr.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -38,6 +41,7 @@ namespace CRUDWITHDAPPER
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                        "~/Content/PatientHomePage.css",
+                       "~/Content/Common-Style.css",
                       "~/Content/toastr.min.css",
                        "~/Content/bootstrap-datepicker.min.css", 
                       "~/Content/bootstrap-datetimepicker.min.css"));

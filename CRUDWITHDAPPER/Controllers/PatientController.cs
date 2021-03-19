@@ -1,6 +1,5 @@
 ﻿using CRUDWITHDAPPER.Models;
 using CRUDWITHDAPPER.PatientBL;
-using Newtonsoft.Json;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -10,7 +9,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Serialization;
@@ -57,13 +55,13 @@ namespace CRUDWITHDAPPER.Controllers
         {
             try
             {
-                System.Xml.Linq.XElement el = new System.Xml.Linq.XElement("PatientInfo",formdata.Select(kv => new System.Xml.Linq.XElement(kv.Key, kv.Value)));
+                System.Xml.Linq.XElement el = new System.Xml.Linq.XElement("PatientInfo", formdata.Select(kv => new System.Xml.Linq.XElement(kv.Key, kv.Value)));
                 var xml = el.ToString();
                 XMlClass xMLClass = new XMlClass
                 {
                     PatietXML = xml,
                 };
-                _patientDAL.InsertUpdatePatient(xMLClass, "sp_InsertUpdatePEG");
+                _patientDAL.InsertUpdatePatient(xMLClass, "sp_InsertPatient");
                 return Json("Data Saved Successfully");
             }
             catch (Exception ex)
@@ -93,7 +91,8 @@ namespace CRUDWITHDAPPER.Controllers
             try
             {
                 var patient = _patientDAL.GetPatientById(id);
-                return Json(patient, JsonRequestBehavior.AllowGet);
+                var result = new { patient.Item1, patient.Item2 };
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -208,7 +207,7 @@ namespace CRUDWITHDAPPER.Controllers
             // return 
             return item;
         }
-         public static void SetItemFromRow<T>(T item, DataRow row) where T : new()
+        public static void SetItemFromRow<T>(T item, DataRow row) where T : new()
         {
             // go through each column
             foreach (DataColumn c in row.Table.Columns)
@@ -232,7 +231,7 @@ namespace CRUDWITHDAPPER.Controllers
             ExcelWorksheet ws = pck.Workbook.Worksheets.Add("PatientList");
             ws.Cells["A1:E1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
             ws.Cells["A1:E1"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(string.Format("Yellow")));
-            for (int i = 1; i <= patients.Count()+1; i++)
+            for (int i = 1; i <= patients.Count() + 1; i++)
             {
                 ws.Cells["A" + i + ":" + "E" + i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
                 ws.Cells["A" + i + ":" + "E" + i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
@@ -261,6 +260,11 @@ namespace CRUDWITHDAPPER.Controllers
             Response.AddHeader("content-disposition", "attachment; filename=PatientList.xlsx");
             Response.BinaryWrite(pck.GetAsByteArray());
             Response.End();
+        }
+
+        public PartialViewResult QuickAddPatient()
+        {
+            return PartialView("_QuickAddPatient");
         }
     }
 }

@@ -7,12 +7,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-    @*@Scripts.Render("~/bundles/patient")*@
     @Scripts.Render("~/bundles/bootstrap")
-    @*@Scripts.Render("~/bundles/patient")*@
-    @*<link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
-    <link href="~/Content/toastr.min.css" rel="stylesheet" />*@
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -36,7 +31,6 @@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
-        @*<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>*@
     </div>
     <div class="container body-content">
         @RenderBody()
@@ -45,11 +39,6 @@
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
-    @*<script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
-    @*<script src="~/Scripts/Patient.js"></script>*@
-    @*<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
-    <script src="~/Scripts/toastr.min.js"></script>*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

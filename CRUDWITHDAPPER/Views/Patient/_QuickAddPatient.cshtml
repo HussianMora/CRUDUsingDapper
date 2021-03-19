@@ -1,0 +1,30 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">Quick Add</h4>
+        </div>
+        <div class="modal-body p-10">
+            <label>Name:</label>
+            <input class="form-control text-box single-line valid" id="QA_Name" name="Name" type="text" value="Hussain">
+            <label>DOB:</label>
+            <input class="form-control text-box single-line date-picker" id="QA_DOB" name="DOB" type="text" value="13/12/2020">
+        </div>
+        <div class="modal-footer p-5 bg-white sticky-bottom">
+            <div class="text-left">
+                <button type="button" class="btn btn-sm btn-dark" id="btnAddUpdate" onclick="quickAddPatient();">Save</button>
+                <button type="button" class="btn btn-sm btn-gray">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $('.date-picker').datepicker();
+</script>
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/patient")

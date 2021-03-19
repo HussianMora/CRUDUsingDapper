@@ -13,9 +13,9 @@ namespace CRUDWITHDAPPER.PatientBL
         List<T> GetPatients<T>();
 
         void InsertUpdatePatient<T>(T obj, string spName) where T : XMlClass;
- 
 
-         object GetPatientById(int id);
+
+        Tuple<IEnumerable<PatientDetails1>, IEnumerable<PatientDetails2>> GetPatientById(int id);
 
         string DeletePatient(int id);
 
